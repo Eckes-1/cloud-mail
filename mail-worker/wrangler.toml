@@ -6,14 +6,14 @@ keep_vars = true
 [observability]
 enabled = true
 
-#[[d1_databases]]
-#binding = "db"			#d1数据库绑定名默认不可修改
-#database_name = ""		#d1数据库名字
-#database_id = ""		#d1数据库id
+[[d1_databases]]
+binding = "db"
+database_name = "cloud-mail"
+database_id = "5088b8d6-e1be-4aa6-9875-c43dc6cba611"
 
-#[[kv_namespaces]]
-#binding = "kv"			#kv绑定名默认不可修改
-#id = ""					#kv数据库id
+[[kv_namespaces]]
+binding = "kv"
+id = "4236516e4c7b4dc39c90110b6945488b"
 
 #[[r2_buckets]]
 #binding = "r2"			#r2对象存储绑定名默认不可修改
@@ -30,10 +30,10 @@ crons = ["0 16 * * *"]	#定时任务每天晚上12点执行
 
 
 #[vars]
-#orm_log = false
-#domain = []				#邮件域名可可配置多个 示例: ["example1.com","example2.com"]
-#admin = ""				#管理员的邮箱	示例: admin@example.com
-#jwt_secret = ""			#jwt令牌的密钥,随便填一串字符串
+#orm_log = true
+#domain = ["example.com"]
+#admin = "1@example.com"
+#jwt_secret = "test-secret"
 
-[build]
-command = "pnpm --prefix ../mail-vue install && pnpm --prefix ../mail-vue run build"
+#[build]
+#command = "pnpm --prefix ../mail-vue install && pnpm --prefix ../mail-vue run build"

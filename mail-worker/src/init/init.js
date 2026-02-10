@@ -1,6 +1,6 @@
 import settingService from '../service/setting-service';
 import emailUtils from '../utils/email-utils';
-import {emailConst} from "../const/entity-const";
+import { emailConst } from "../const/entity-const";
 
 const dbInit = {
 	async init(c) {
@@ -28,6 +28,7 @@ const dbInit = {
 		await this.v2_7DB(c);
 		await this.v2_8DB(c);
 		await this.v2_9DB(c);
+		await this.v3_0DB(c);
 		await settingService.refresh(c);
 		return c.text('success');
 	},
@@ -35,6 +36,17 @@ const dbInit = {
 	async v2_9DB(c) {
 		try {
 			await c.env.db.prepare(`UPDATE setting SET auto_refresh = 5 WHERE auto_refresh = 1;`).run();
+		} catch (e) {
+			console.warn(`跳过字段：${e.message}`);
+		}
+	},
+
+	async v3_0DB(c) {
+		try {
+			await c.env.db.batch([
+				c.env.db.prepare(`ALTER TABLE setting ADD COLUMN footer_text TEXT NOT NULL DEFAULT '';`),
+				c.env.db.prepare(`ALTER TABLE setting ADD COLUMN footer_url TEXT NOT NULL DEFAULT '';`)
+			]);
 		} catch (e) {
 			console.warn(`跳过字段：${e.message}`);
 		}
@@ -316,7 +328,7 @@ const dbInit = {
 
 	},
 
-	async v1_2DB(c){
+	async v1_2DB(c) {
 
 		const ADD_COLUMN_SQL_LIST = [
 			`ALTER TABLE email ADD COLUMN recipient TEXT NOT NULL DEFAULT '[]';`,
@@ -401,7 +413,7 @@ const dbInit = {
       )
     `).run();
 
-		const {permTotal} = await c.env.db.prepare(`SELECT COUNT(*) as permTotal FROM perm`).first();
+		const { permTotal } = await c.env.db.prepare(`SELECT COUNT(*) as permTotal FROM perm`).first();
 
 		if (permTotal === 0) {
 			await c.env.db.prepare(`
@@ -477,7 +489,7 @@ const dbInit = {
       )
     `).run();
 
-		const {rolePermCount} = await c.env.db.prepare(`SELECT COUNT(*) as rolePermCount FROM role_perm`).first();
+		const { rolePermCount } = await c.env.db.prepare(`SELECT COUNT(*) as rolePermCount FROM role_perm`).first();
 		if (rolePermCount === 0) {
 			await c.env.db.prepare(`
         INSERT INTO role_perm (id, role_id, perm_id) VALUES
@@ -600,13 +612,13 @@ const dbInit = {
 		}
 
 		const queryList = []
-		const {results} = await c.env.db.prepare('SELECT receive_email,email_id FROM email').all();
+		const { results } = await c.env.db.prepare('SELECT receive_email,email_id FROM email').all();
 		results.forEach(emailRow => {
 			const recipient = {}
 			recipient.address = emailRow.receive_email
 			recipient.name = ''
 			const recipientStr = JSON.stringify([recipient]);
-			const sql = c.env.db.prepare('UPDATE email SET recipient = ? WHERE email_id = ?').bind(recipientStr,emailRow.email_id);
+			const sql = c.env.db.prepare('UPDATE email SET recipient = ? WHERE email_id = ?').bind(recipientStr, emailRow.email_id);
 			queryList.push(sql)
 		})
 
@@ -628,11 +640,11 @@ const dbInit = {
 
 		queryList.push(c.env.db.prepare(`ALTER TABLE account ADD COLUMN name TEXT NOT NULL DEFAULT ''`));
 
-		const {results} = await c.env.db.prepare(`SELECT account_id, email FROM account`).all();
+		const { results } = await c.env.db.prepare(`SELECT account_id, email FROM account`).all();
 
 		results.forEach(accountRow => {
 			const name = emailUtils.getName(accountRow.email);
-			const sql = c.env.db.prepare('UPDATE account SET name = ? WHERE account_id = ?').bind(name,accountRow.account_id);
+			const sql = c.env.db.prepare('UPDATE account SET name = ? WHERE account_id = ?').bind(name, accountRow.account_id);
 			queryList.push(sql)
 		})
 

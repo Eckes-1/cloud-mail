@@ -123,6 +123,21 @@
             </div>
           </div>
 
+          <!-- Login Footer Settings Card -->
+          <div class="settings-card">
+            <div class="card-title">登录页右下角设置</div>
+            <div class="card-content">
+              <div class="setting-item">
+                <div class="title-item"><span>配置</span></div>
+                <div class="forward">
+                   <el-button class="opt-button" size="small" type="primary" @click="openFooterSetting">
+                     <Icon icon="fluent:settings-48-regular" width="18" height="18"/>
+                   </el-button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Email Sending Settings Card -->
           <div class="settings-card">
             <div class="card-title">{{ $t('emailSetting') }}</div>
@@ -713,6 +728,15 @@
           </div>
         </form>
       </el-dialog>
+      <el-dialog v-model="footerSettingShow" title="页脚设置" width="340" @closed="footerForm.text='';footerForm.url=''">
+        <form>
+           <div style="margin-bottom: 10px">底部文字</div>
+           <el-input v-model="footerForm.text" :placeholder="setting.footerText || '显示的文字'" />
+           <div style="margin: 10px 0">底部链接</div>
+           <el-input v-model="footerForm.url" :placeholder="setting.footerUrl || '点击跳转的链接'" />
+           <el-button type="primary" :loading="settingLoading" @click="saveFooterSetting" style="margin-top: 15px; width: 100%">{{ $t('save') }}</el-button>
+        </form>
+      </el-dialog>
       <el-dialog v-model="emailPrefixShow" :title="t('emailPrefix')"  @closed="resetEmailPrefix"  >
         <div class="email-prefix">
           <div>{{ t('atLeast') }}</div>
@@ -809,6 +833,30 @@ const s3 = reactive({
   s3SecretKey: '',
   forcePathStyle: 1
 })
+
+const footerSettingShow = ref(false)
+const footerForm = reactive({
+  text: '',
+  url: ''
+})
+
+function openFooterSetting() {
+    footerForm.text = setting.value.footerText
+    footerForm.url = setting.value.footerUrl
+    footerSettingShow.value = true
+}
+
+function saveFooterSetting() {
+    settingLoading.value = true
+    setting.value.footerText = footerForm.text
+    setting.value.footerUrl = footerForm.url
+    settingSet(setting.value).then(() => {
+        ElMessage.success('保存成功')
+        footerSettingShow.value = false
+    }).finally(() => {
+        settingLoading.value = false
+    })
+}
 
 const noticeForm = reactive({
   noticeTitle: '',

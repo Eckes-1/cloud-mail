@@ -140,8 +140,10 @@
         </el-button>
       </div>
     </el-dialog>
-    <a class="github" href="https://github.com/maillab/cloud-mail">
-      <Icon icon="mingcute:github-line" color="#1890ff" width="20" height="20" />
+    <a class="github" :href="settingStore.settings.footerUrl || 'https://github.com/maillab/cloud-mail'" target="_blank"
+       :style="settingStore.settings.footerText ? { width: 'auto', padding: '0 10px', borderRadius: '5px' } : '' ">
+      <span v-if="settingStore.settings.footerText" style="font-size: 14px;color: #1890ff">{{ settingStore.settings.footerText }}</span>
+      <Icon v-else icon="mingcute:github-line" color="#1890ff" width="20" height="20" />
     </a>
   </div>
 </template>
