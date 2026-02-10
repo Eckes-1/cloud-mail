@@ -207,7 +207,8 @@ const settingService = {
 			linuxdoSwitch: settingRow.linuxdoSwitch,
 			minEmailPrefix: settingRow.minEmailPrefix,
 			footerText: settingRow.footerText,
-			footerUrl: settingRow.footerUrl
+			footerUrl: settingRow.footerUrl,
+			footerIcon: settingRow.footerIcon
 		};
 	}
 };

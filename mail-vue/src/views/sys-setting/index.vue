@@ -734,6 +734,9 @@
            <el-input v-model="footerForm.text" :placeholder="setting.footerText || '显示的文字'" />
            <div style="margin: 10px 0">底部链接</div>
            <el-input v-model="footerForm.url" :placeholder="setting.footerUrl || '点击跳转的链接'" />
+           <div style="margin: 10px 0">底部图标</div>
+           <el-input v-model="footerForm.icon" :placeholder="setting.footerIcon || 'Iconify 图标名称 (默认 mingcute:github-line)'" />
+           <div style="font-size: 12px; color: #999; margin-top: 4px;">支持 <a href="https://icon-sets.iconify.design/" target="_blank" style="color: inherit; text-decoration: underline;">Iconify</a> 图标库</div>
            <el-button type="primary" :loading="settingLoading" @click="saveFooterSetting" style="margin-top: 15px; width: 100%">{{ $t('save') }}</el-button>
         </form>
       </el-dialog>
@@ -837,12 +840,16 @@ const s3 = reactive({
 const footerSettingShow = ref(false)
 const footerForm = reactive({
   text: '',
-  url: ''
+  text: '',
+  url: '',
+  icon: ''
 })
 
 function openFooterSetting() {
     footerForm.text = setting.value.footerText
+    footerForm.text = setting.value.footerText
     footerForm.url = setting.value.footerUrl
+    footerForm.icon = setting.value.footerIcon
     footerSettingShow.value = true
 }
 
@@ -850,6 +857,7 @@ function saveFooterSetting() {
     settingLoading.value = true
     setting.value.footerText = footerForm.text
     setting.value.footerUrl = footerForm.url
+    setting.value.footerIcon = footerForm.icon
     settingSet(setting.value).then(() => {
         ElMessage.success('保存成功')
         footerSettingShow.value = false

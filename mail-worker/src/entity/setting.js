@@ -48,6 +48,7 @@ export const setting = sqliteTable('setting', {
 	minEmailPrefix: integer('min_email_prefix').default(0).notNull(),
 	emailPrefixFilter: text('email_prefix_filter').default('').notNull(),
 	footerText: text('footer_text').default('').notNull(),
-	footerUrl: text('footer_url').default('').notNull()
+	footerUrl: text('footer_url').default('').notNull(),
+	footerIcon: text('footer_icon').default('').notNull()
 });
 export default setting
