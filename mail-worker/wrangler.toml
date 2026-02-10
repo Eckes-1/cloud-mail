@@ -35,5 +35,5 @@ crons = ["0 16 * * *"]	#定时任务每天晚上12点执行
 #admin = "1@example.com"
 #jwt_secret = "test-secret"
 
-#[build]
-#command = "pnpm --prefix ../mail-vue install && pnpm --prefix ../mail-vue run build"
+[build]
+command = "pnpm --prefix ../mail-vue install && pnpm --prefix ../mail-vue run build"
